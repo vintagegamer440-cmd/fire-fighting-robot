@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fire Fighting Robot — an Arduino-based robotics project designed to detect fire and assist emergency responders.">
+  <title>Fire Fighting Robot | AI Innovista Project</title>
+  <style>
+    :root {
+      --bg: #08111f; --panel: #101d30; --panel2: #14243a; --text: #f4f7fb;
+      --muted: #b4c2d5; --orange: #ff7a36; --yellow: #ffc857; --line: rgba(255,255,255,.12);
+      --green: #65d6a6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; color: var(--text); background: var(--bg); line-height: 1.65; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, 92%); margin: auto; }
+    header { position: sticky; top: 0; z-index: 10; background: rgba(8,17,31,.9); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { font-weight: 800; letter-spacing: .3px; display: flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(135deg,var(--orange),var(--yellow)); color: #1b1720; font-size: 21px; }
+    .navlinks { display: flex; gap: 22px; color: var(--muted); font-size: 14px; }
+    .navlinks a:hover { color: var(--yellow); }
+    .hero { padding: 86px 0 74px; background: radial-gradient(circle at 80% 20%, rgba(255,122,54,.2), transparent 30%), radial-gradient(circle at 15% 90%, rgba(255,200,87,.12), transparent 32%); }
+    .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 44px; align-items: center; }
+    .eyebrow { color: var(--yellow); text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 800; }
+    h1 { font-size: clamp(42px,6vw,72px); line-height: 1.04; margin: 16px 0 20px; letter-spacing: -2px; }
+    h1 span { color: var(--orange); }
+    .lead { color: var(--muted); font-size: 18px; max-width: 650px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn { padding: 12px 19px; border-radius: 12px; font-weight: 750; font-size: 14px; display: inline-block; }
+    .primary { color: #20140d; background: linear-gradient(135deg,var(--yellow),var(--orange)); }
+    .secondary { border: 1px solid var(--line); color: var(--text); }
+    .robot-card { min-height: 310px; border: 1px solid var(--line); border-radius: 26px; background: linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.02)); display: grid; place-items: center; position: relative; overflow: hidden; }
+    .robot-card:before,.robot-card:after { content:""; position:absolute; border:1px solid rgba(255,200,87,.25); border-radius:50%; width:260px;height:260px; }
+    .robot-card:after { width:340px;height:340px; }
+    .robot-icon { z-index:1; font-size: 112px; filter: drop-shadow(0 18px 24px rgba(255,122,54,.25)); }
+    .robot-caption { position:absolute; bottom:20px; z-index:2; color:var(--muted); font-size:12px; letter-spacing:1px; text-transform:uppercase; }
+    section { padding: 72px 0; }
+    .section-head { max-width: 720px; margin-bottom: 30px; }
+    h2 { font-size: clamp(28px,4vw,40px); line-height:1.15; margin: 8px 0 12px; }
+    .sub { color: var(--muted); margin: 0; }
+    .cards { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:22px; }
+    .card .emoji { font-size:27px; }
+    .card h3 { margin:10px 0 7px; font-size:18px; }
+    .card p { color:var(--muted); margin:0; font-size:14px; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    .feature-list { display:grid; gap:13px; }
+    .feature { display:flex; gap:14px; padding:16px; border-radius:15px; background:var(--panel); border:1px solid var(--line); }
+    .feature b { display:block; margin-bottom:3px; }
+    .feature span { color:var(--muted); font-size:14px; }
+    .step { display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--line); }
+    .num { flex:0 0 36px; height:36px; border-radius:11px; display:grid; place-items:center; color:#20140d; font-weight:900; background:linear-gradient(135deg,var(--yellow),var(--orange)); }
+    .step p { margin:3px 0 0; color:var(--muted); font-size:14px; }
+    .note { padding:18px 20px; border:1px solid rgba(101,214,166,.3); background:rgba(101,214,166,.07); border-radius:16px; color:#d9f7e9; font-size:14px; }
+    .team { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+    .member { background:var(--panel); border:1px solid var(--line); padding:20px 12px; text-align:center; border-radius:17px; }
+    .avatar { width:52px;height:52px;border-radius:17px;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,#ffbd69,#ff7438);color:#25160f;font-size:20px;font-weight:900; }
+    .member h3 { font-size:15px; margin:0; }
+    .member p { color:var(--muted); font-size:12px; margin:4px 0 0; }
+    .future { background:linear-gradient(135deg,rgba(255,122,54,.1),rgba(255,200,87,.04)); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    footer { padding:30px 0; color:var(--muted); font-size:13px; }
+    footer .foot { display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+    @media(max-width:850px) { .hero-grid,.two-col { grid-template-columns:1fr; } .cards { grid-template-columns:repeat(2,1fr); } .team { grid-template-columns:repeat(3,1fr); } .navlinks { gap:12px; } }
+    @media(max-width:560px) { .navlinks { display:none; } .hero { padding:60px 0; } section { padding:54px 0; } .cards { grid-template-columns:1fr; } .team { grid-template-columns:repeat(2,1fr); } .robot-card { min-height:230px; } .robot-icon { font-size:90px; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#home"><span class="brand-mark">🔥</span> FIRE FIGHTING ROBOT</a>
+      <div class="navlinks">
+        <a href="#about">About</a><a href="#working">How It Works</a><a href="#components">Components</a><a href="#team">Our Team</a><a href="#future">Future Scope</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">AI Innovista • Robotics Project</div>
+        <h1>Technology that helps <span>protect lives.</span></h1>
+        <p class="lead">Introducing our Fire Fighting Robot — an Arduino-based prototype that uses flame sensors to detect fire and programmed motor control to move towards the detected direction. Our goal is to explore how robotics can support people during fire emergencies.</p>
+        <div class="actions">
+          <a class="btn primary" href="#working">Explore the Project ↓</a>
+          <a class="btn secondary" href="#team">Meet the Team</a>
+        </div>
+      </div>
+      <div class="robot-card" aria-label="Fire fighting robot illustration">
+        <div class="robot-icon">🤖</div>
+        <div class="robot-caption">Sense • Decide • Move • Assist</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">01 / Project Overview</div>
+        <h2>What is a Fire Fighting Robot?</h2>
+        <p class="sub">A Fire Fighting Robot is a robotic system designed to detect fire and assist emergency responders. This student prototype demonstrates the fundamentals of flame sensing, microcontroller programming and motorized movement.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><div class="emoji">🎯</div><h3>Our Objective</h3><p>To demonstrate how a robot can sense a flame and respond through programmed movement, supporting safer fire-response ideas.</p></article>
+        <article class="card"><div class="emoji">🧠</div><h3>Control System</h3><p>Arduino acts as the controller. It receives sensor signals, follows the program logic and sends control signals to the motor driver.</p></article>
+        <article class="card"><div class="emoji">🛡️</div><h3>Safety Vision</h3><p>The long-term aim is to help reduce human exposure to hazardous areas. A robot is intended to assist trained firefighters, not replace them.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="working" style="background:rgba(255,255,255,.02)">
+    <div class="wrap two-col">
+      <div>
+        <div class="section-head">
+          <div class="eyebrow">02 / Working Principle</div>
+          <h2>How does it work?</h2>
+          <p class="sub">The robot follows a simple sense–process–act sequence.</p>
+        </div>
+        <div class="step"><div class="num">1</div><div><b>Fire detection</b><p>Flame sensors detect infrared radiation from a flame within their effective range and provide output signals.</p></div></div>
+        <div class="step"><div class="num">2</div><div><b>Signal processing</b><p>The Arduino reads the sensor outputs and applies the decision logic written in its program.</p></div></div>
+        <div class="step"><div class="num">3</div><div><b>Movement control</b><p>The Arduino sends control signals to the motor driver, which operates the DC motors using a suitable motor power source.</p></div></div>
+        <div class="step"><div class="num">4</div><div><b>Direction and response</b><p>The robot moves according to the programmed sensor logic. A servo can position an attached mechanism where one is installed.</p></div></div>
+      </div>
+      <div>
+        <div class="section-head">
+          <div class="eyebrow">System Flow</div>
+          <h2>From sensor to action</h2>
+        </div>
+        <div class="card" style="padding:25px">
+          <div style="display:grid;gap:10px;text-align:center">
+            <div style="padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)">🔥 Flame Sensors<br><small style="color:var(--muted)">Detect flame signal</small></div>
+            <div style="color:var(--yellow);font-size:22px">↓</div>
+            <div style="padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)">🧠 Arduino<br><small style="color:var(--muted)">Processes sensor inputs</small></div>
+            <div style="color:var(--yellow);font-size:22px">↓</div>
+            <div style="padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)">⚙️ Motor Driver<br><small style="color:var(--muted)">Controls motor power</small></div>
+            <div style="color:var(--yellow);font-size:22px">↓</div>
+            <div style="padding:15px;border:1px solid rgba(255,122,54,.4);border-radius:12px;background:rgba(255,122,54,.09)">🤖 DC Motors<br><small style="color:var(--muted)">Move the robot</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="components">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">03 / Hardware</div>
+        <h2>Main components and their functions</h2>
+        <p class="sub">Each component has a specific role in the robot's sensing and movement system.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><div class="emoji">🔥</div><h3>Flame Sensors</h3><p>Detect flame-related infrared radiation and send output signals to the controller.</p></article>
+        <article class="card"><div class="emoji">🧠</div><h3>Arduino Board</h3><p>Acts as the brain of the prototype by reading inputs and executing the programmed logic.</p></article>
+        <article class="card"><div class="emoji">⚙️</div><h3>Motor Driver</h3><p>Provides the interface needed to control DC motors; motors should use a suitable external power supply.</p></article>
+        <article class="card"><div class="emoji">🔄</div><h3>Four DC Motors</h3><p>Provide the movement needed for the robot to travel and change direction.</p></article>
+        <article class="card"><div class="emoji">↪️</div><h3>Servo Motor</h3><p>Can rotate an attached part to a chosen angle, such as positioning a nozzle if a spraying unit is fitted.</p></article>
+        <article class="card"><div class="emoji">🔋</div><h3>Power Supply</h3><p>Supplies electrical energy to the robot. The voltage and current must match the board, driver and motors.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two-col">
+      <div>
+        <div class="eyebrow">04 / Benefits</div>
+        <h2>Advantages</h2>
+        <div class="feature-list">
+          <div class="feature"><div>🧑‍🚒</div><div><b>Supports firefighter safety</b><span>Can help explore hazardous areas while reducing the need for people to approach every risk directly.</span></div></div>
+          <div class="feature"><div>⚡</div><div><b>Sensor-based response</b><span>Can react to sensor inputs using programmed instructions.</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">05 / Limitations</div>
+        <h2>Current limitations</h2>
+        <div class="feature-list">
+          <div class="feature"><div>📡</div><div><b>Limited sensing range</b><span>Flame sensors have a finite range and can be affected by distance, angle and surrounding conditions.</span></div></div>
+          <div class="feature"><div>🔋</div><div><b>Power dependency</b><span>Operation depends on battery capacity, stable connections and suitable power for the motors.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="future" id="future">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">06 / Future Scope</div>
+        <h2>What can we improve next?</h2>
+        <p class="sub">The current model is a learning prototype. These are possible future upgrades, not claims about features already completed.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><div class="emoji">📷</div><h3>AI Fire Recognition</h3><p>Add a camera and an AI model to distinguish fire from other bright objects more intelligently.</p></article>
+        <article class="card"><div class="emoji">🌡️</div><h3>Smoke & Temperature Sensors</h3><p>Use additional sensors to collect more information about the environment.</p></article>
+        <article class="card"><div class="emoji">📍</div><h3>Remote Monitoring</h3><p>Send status and location information to an operator for supervision.</p></article>
+        <article class="card"><div class="emoji">🚧</div><h3>Obstacle Avoidance</h3><p>Add distance sensors to help the robot navigate around objects.</p></article>
+        <article class="card"><div class="emoji">💧</div><h3>Extinguishing Mechanism</h3><p>Integrate a suitable pump, tank and controlled nozzle after safe engineering and testing.</p></article>
+        <article class="card"><div class="emoji">🧭</div><h3>Smarter Navigation</h3><p>Improve direction selection and navigation using more sensor data and refined software.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">07 / The People Behind the Project</div>
+        <h2>Meet our team</h2>
+        <p class="sub">A team effort built on curiosity, teamwork and a shared interest in technology.</p>
+      </div>
+      <div class="team">
+        <div class="member"><div class="avatar">AT</div><h3>Ayushman Tiwari</h3><p>Team Member</p></div>
+        <div class="member"><div class="avatar">SY</div><h3>Shreyash Yadav</h3><p>Team Member</p></div>
+        <div class="member"><div class="avatar">AV</div><h3>Ayush Vishawakarma</h3><p>Team Member</p></div>
+        <div class="member"><div class="avatar">ST</div><h3>Satyam Tiwari</h3><p>Team Member</p></div>
+        <div class="member"><div class="avatar">AT</div><h3>Ayush Tiwari</h3><p>Team Member</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="note"><b>Important note:</b> This website describes the project's design and intended operation. Actual performance depends on the hardware, wiring and code implemented in the prototype. A student prototype is not a replacement for certified firefighting equipment or emergency services. Never test it with an open flame during an exhibition.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 Fire Fighting Robot Project • AI Innovista</div>
+    <div>Built with teamwork, learning and innovation.</div>
+  </div>
+</footer>
+</body>
+</html>
